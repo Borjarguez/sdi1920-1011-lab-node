@@ -11,7 +11,7 @@ module.exports = function (app, swig) {
             "precio": "1.1"
         }];
 
-        let respuesta = swig.renderFile('views/btienda.html', {
+        let respuesta = swig.renderFile('views/tienda.html', {
             vendedor: 'Tienda de canciones',
             canciones: canciones
         });
@@ -23,6 +23,11 @@ module.exports = function (app, swig) {
         let respuesta = parseInt(req.query.num1) + parseInt(req.query.num2);
         ;
         res.send(String(respuesta));
+    });
+
+    app.get('/canciones/agregar', function (req, res) {
+        let respuesta = swig.renderFile('views/bagregar.html', {});
+        res.send(respuesta);
     });
 
     app.get('/canciones/:id', function (req, res) {
@@ -45,9 +50,6 @@ module.exports = function (app, swig) {
         res.send('Respuesta patrón promo* ');
     });
 
-    app.get('/canciones/agregar', function (req, res) {
-        let respuesta = swig.renderFile('views/bagregar.html', {});
-        res.send(respuesta);
-    });
+
 
 };
