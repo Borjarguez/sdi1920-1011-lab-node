@@ -15,7 +15,7 @@ module.exports = function (app, swig, gestorBD) {
         let usuario = {
             email: req.body.email,
             password: seguro
-        }
+        };
 
         gestorBD.insertarUsuario(usuario, function (id) {
             if (id == null) {

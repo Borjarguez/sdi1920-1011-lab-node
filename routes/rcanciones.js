@@ -1,4 +1,5 @@
 module.exports = function (app, swig, gestorBD) {
+
     app.get("/canciones", function (req, res) {
         var canciones = [{
             "nombre": "Blank space",
@@ -21,7 +22,6 @@ module.exports = function (app, swig, gestorBD) {
 
     app.get('/suma', function (req, res) {
         let respuesta = parseInt(req.query.num1) + parseInt(req.query.num2);
-        ;
         res.send(String(respuesta));
     });
 
@@ -121,4 +121,19 @@ module.exports = function (app, swig, gestorBD) {
         });
     });
 
+    app.get("/publicaciones", function(req, res) {
+        let criterio = { autor : req.session.usuario };
+
+        gestorBD.obtenerCanciones(criterio, function(canciones) {
+            if (canciones == null) {
+                res.send("Error al listar ");
+            } else {
+                let respuesta = swig.renderFile('views/btienda.html',
+                    {
+                        canciones : canciones
+                    });
+                res.send(respuesta);
+            }
+        });
+    });
 };
