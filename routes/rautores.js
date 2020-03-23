@@ -52,4 +52,4 @@ module.exports = function (app, swig) {
     app.get('/autores*', function (req, res) {
         res.redirect('/autores');
     });
-}
+};
