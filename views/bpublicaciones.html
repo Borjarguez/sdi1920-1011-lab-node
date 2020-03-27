@@ -23,17 +23,12 @@
 				<td>{{ cancion.nombre }}</td>
 				<td>{{ cancion.genero }}</td>
 				<td><a href="/cancion/modificar/{{ cancion._id.toString() }}"">Modificar</a> <br>
-					<a href="/cancion/eliminar/{{ cancion._id.toString() }}">Eliminar</a> <br>
-			    </td>
+                    <a href="/cancion/eliminar/{{ cancion._id.toString() }}">Eliminar</a> <br>
+                    <a href="/cancion/{{ cancion._id.toString() }}">Detalles</a> <br>
+                </td>
 			</tr>
 		{% endfor %}
 		</tbody>
 	</table>
 </div>
-
-<!-- Agregar Canción -->
-<div class="row text-right">
-	<a href="/canciones/agregar" class="btn btn-info" role="button">Agregar canción</a>
-</div>
-
 {% endblock %}

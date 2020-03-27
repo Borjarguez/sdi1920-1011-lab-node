@@ -27,12 +27,11 @@ gestorBD.init(app, mongo);
 // routerUsuarioSession
 let routerUsuarioSession = express.Router();
 routerUsuarioSession.use(function (req, res, next) {
-    console.log("routerUsuarioSession");
+    //console.log("routerUsuarioSession");
     if (req.session.usuario) {
         // dejamos correr la petición
         next();
     } else {
-        console.log("va a : " + req.session.destino)
         res.redirect("/identificarse");
     }
 });
@@ -44,7 +43,7 @@ app.use("/publicaciones", routerUsuarioSession);
 //routerAudios
 let routerAudios = express.Router();
 routerAudios.use(function (req, res, next) {
-    console.log("routerAudios");
+    //console.log("routerAudios");
     let path = require('path');
     let idCancion = path.basename(req.originalUrl, '.mp3');
     gestorBD.obtenerCanciones({"_id": mongo.ObjectID(idCancion)}, function (canciones) {
@@ -69,6 +68,7 @@ app.set('crypto', crypto);
 //Rutas/controladores por lógica
 require("./routes/rusuarios.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 require("./routes/rcanciones.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
+require("./routes/rcomentarios.js")(app, swig, gestorBD);
 //require("./routes/rautores.js")(app, swig); // (app, param1, param2, etc.)
 
 // Lanzar el servidor

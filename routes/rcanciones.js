@@ -30,7 +30,7 @@ module.exports = function (app, swig, gestorBD) {
         res.send(respuesta);
     });
 
-    app.get('/canciones/:id', function (req, res) {
+    app.get('/cancion/:id', function (req, res) {
         let cancionID = gestorBD.mongo.ObjectID(req.params.id);
         let criterio = {"_id": cancionID};
         let criterioComentario = {"cancion_id": cancionID};
@@ -40,9 +40,9 @@ module.exports = function (app, swig, gestorBD) {
                 res.send(respuesta);
             } else {
                 gestorBD.obtenerComentarios(criterioComentario, function (comentarios) {
-                    if(comentarios == null)
+                    if (comentarios == null)
                         res.send(respuesta);
-                    else{
+                    else {
                         let respuesta = swig.renderFile('views/bcancion.html',
                             {
                                 cancion: canciones[0],
@@ -208,22 +208,4 @@ module.exports = function (app, swig, gestorBD) {
         }
     }
 
-    // OPCIONALES SESION 8
-    app.post('/comentarios/:cancion_id', function (req, res) {
-        let cancion_id = req.params.cancion_id;
-
-        let comentario = {
-            autor : req.session.usuario,
-            text : req.body.comentario,
-            cancion_id: cancion_id
-        };
-
-        gestorBD.insertarComentario(comentario, function (comentario) {
-            if (comentario == null|| req.session.usuario == null) {
-                res.send("Error al insertar el comentario");
-            } else {
-                res.send("Comentario añadido");
-            }
-        });
-    })
 };

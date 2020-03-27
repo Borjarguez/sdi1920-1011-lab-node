@@ -1,4 +1,5 @@
 module.exports = function (app, swig, gestorBD) {
+
     app.get("/usuarios", function (req, res) {
         res.send("ver usuarios");
     });
@@ -46,7 +47,8 @@ module.exports = function (app, swig, gestorBD) {
                 res.send("No identificado: ");
             } else {
                 req.session.usuario = usuarios[0].email;
-                res.send("identificado");
+                //res.send("identificado");
+                res.redirect('/publicaciones');
             }
         });
     });
