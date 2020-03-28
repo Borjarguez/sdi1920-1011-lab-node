@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block titulo %} Mis publicaciones {% endblock %}
+
+{% block contenido_principal %}
+<h2>Mis canciones favoritas</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Genero</th>
+            <th class="col-md-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cancion in canciones %}
+        <tr>
+            <td>{{ cancion.nombre }}</td>
+            <td>{{ cancion.genero }}</td>
+            <td><a href="/favoritos/eliminar/{{ cancion._id.toString() }}">Eliminar</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
