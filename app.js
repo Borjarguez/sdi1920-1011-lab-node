@@ -95,6 +95,10 @@ require("./routes/rcomentarios.js")(app, swig, gestorBD);
 require("./routes/rfavourites.js")(app, swig, gestorBD);
 //require("./routes/rautores.js")(app, swig); // (app, param1, param2, etc.)
 
+app.get('/', function (req, res) {
+    res.redirect('/tienda');
+});
+
 // Lanzar el servidor
 app.listen(app.get('port'), function () {
     console.log("Servidor activo");
