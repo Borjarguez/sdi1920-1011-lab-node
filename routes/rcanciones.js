@@ -217,5 +217,46 @@ module.exports = function (app, swig, gestorBD) {
             else
                 res.redirect("/publicaciones");
         });
-    })
+    });
+
+    app.get('/cancion/comprar/:id', function (req, res) {
+        let cancionId = gestorBD.mongo.ObjectID(req.params.id);
+
+        let compra = {
+            usuario: req.session.usuario,
+            cancionId: cancionId
+        };
+        gestorBD.insertarCompra(compra, function (idCompra) {
+            if (idCompra == null) {
+                res.send(respuesta);
+            } else {
+                res.redirect("/compras");
+            }
+        });
+    });
+
+    app.get('/compras', function (req, res) {
+        let criteria = {"usuario": req.session.usuario}
+
+        gestorBD.obtenerCompras(criteria, function (compras) {
+            if (compras == null)
+                res.send("Error al listar");
+            else {
+                let cancionesCompradasIds = [];
+
+                for (i = 0; i < compras.length; i++)
+                    cancionesCompradasIds.push(compras[i].cancionId);
+
+                let criteria = {"_id": {$in: cancionesCompradasIds}}
+
+                gestorBD.obtenerCanciones(criteria, function (canciones) {
+                    let respuesta = swig.renderFile('views/bcompras.html',
+                        {
+                            canciones: canciones
+                        });
+                    res.send(respuesta);
+                });
+            }
+        })
+    });
 };
