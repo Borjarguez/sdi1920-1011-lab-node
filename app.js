@@ -2,6 +2,9 @@
 let express = require('express');
 let app = express();
 
+let fs = require('fs');
+let https = require('https');
+
 let expressSession = require('express-session');
 app.use(expressSession({
     secret: 'abcdefg',
@@ -40,6 +43,30 @@ routerUsuarioSession.use(function (req, res, next) {
 app.use("/canciones/agregar", routerUsuarioSession);
 app.use("/publicaciones", routerUsuarioSession);
 app.use("/favoritos", routerUsuarioSession);
+app.use("/cancion/comprar", routerUsuarioSession);
+app.use("/compras", routerUsuarioSession);
+
+//routerUsuarioAutor
+let routerUsuarioAutor = express.Router();
+routerUsuarioAutor.use(function (req, res, next) {
+    console.log("routerUsuarioAutor");
+    let path = require('path');
+    let id = path.basename(req.originalUrl);
+    // Cuidado porque req.params no funciona
+    // en el router si los params van en la URL.
+    gestorBD.obtenerCanciones({_id: mongo.ObjectID(id)}, function (canciones) {
+        console.log(canciones[0]);
+        if (canciones[0].autor == req.session.usuario) {
+            next();
+        } else {
+            res.redirect("/tienda");
+        }
+    })
+});
+
+//Aplicar routerUsuarioAutor
+app.use("/cancion/modificar", routerUsuarioAutor);
+app.use("/cancion/eliminar", routerUsuarioAutor);
 
 //routerAudios
 let routerAudios = express.Router();
@@ -51,7 +78,14 @@ routerAudios.use(function (req, res, next) {
         if (req.session.usuario && canciones[0].autor == req.session.usuario) {
             next();
         } else {
-            res.redirect("/tienda");
+            let criterio = {usuario: req.session.usuario, cancionId: mongo.ObjectID(idCancion)};
+            gestorBD.obtenerCompras(criterio, function (compras) {
+                if (compras != null && compras.length > 0) {
+                    next();
+                } else {
+                    res.redirect("/tienda");
+                }
+            });
         }
     })
 });
@@ -73,7 +107,22 @@ require("./routes/rcomentarios.js")(app, swig, gestorBD);
 require("./routes/rfavourites.js")(app, swig, gestorBD);
 //require("./routes/rautores.js")(app, swig); // (app, param1, param2, etc.)
 
+app.get('/', function (req, res) {
+    res.redirect('/tienda');
+});
+
+app.use(function (err, req, res, next) {
+    console.log("Error producido: " + err); // mostramos el error en consola
+    if (!res.headerSent) {
+        res.status(400);
+        res.send("Recurso no disponible");
+    }
+});
+
 // Lanzar el servidor
-app.listen(app.get('port'), function () {
+https.createServer({
+    key: fs.readFileSync('certificates/alice.key'),
+    cert: fs.readFileSync('certificates/alice.crt')
+}, app).listen(app.get('port'), function () {
     console.log("Servidor activo");
 });
