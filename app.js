@@ -113,9 +113,17 @@ app.get('/', function (req, res) {
 
 app.use(function (err, req, res, next) {
     console.log("Error producido: " + err); // mostramos el error en consola
+
+    res.renderFile("views/error.html", {
+        error: err
+    });
+
     if (!res.headerSent) {
         res.status(400);
-        res.send("Recurso no disponible");
+
+        res.renderFile("views/error.html", {
+            error: "Recurso no disponible"
+        });
     }
 });
 
