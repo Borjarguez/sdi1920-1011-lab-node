@@ -42,10 +42,10 @@
             success: function (respuesta) {
                 console.log(respuesta); // <-- Prueba
                 $("#contenedor-principal").load("widget-canciones.html");
-
             },
             error: function (error) {
-                $("#contenedor-principal").load("widget-login.html");
+                $("#widget-agregar").prepend("<div class='alert alert-danger'>Parámetros incorrectos</div>");
+                //$("#contenedor-principal").load("widget-login.html");
             }
         });
     }
