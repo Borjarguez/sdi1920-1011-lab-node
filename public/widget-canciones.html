@@ -7,7 +7,7 @@
         <thead>
         <tr>
             <th><a onclick="ordenarPorNombre()">Nombre</a></th>
-            <th>Genero</th>
+            <th><a onclick="ordenarPorGenero()">Genero</th>
             <th><a onclick="ordenarPorPrecio()">Precio</a></th>
             <th class="col-md-1"></th>
         </tr>
@@ -50,13 +50,35 @@
         precioDsc = !precioDsc; //invertir
     }
 
+    var nombre = true;
     function ordenarPorNombre() {
-        canciones.sort(function (a, b) {
-            if (a.nombre > b.nombre) return 1;
-            if (a.nombre < b.nombre) return -1;
-            return 0;
-        });
+        if (nombre) {
+            canciones.sort(function (a, b) {
+                return a.nombre > b.nombre ? 1 : -1;
+            });
+        } else {
+            canciones.sort(function (a, b) {
+                return a.nombre < b.nombre ? 1 : -1;
+            });
+        }
         actualizarTabla(canciones);
+        nombre = !nombre;
+    }
+
+    var genero = true;
+
+    function ordenarPorGenero() {
+        if (genero) {
+            canciones.sort(function (a, b) {
+                return a.genero > b.genero ? 1 : -1;
+            });
+        } else {
+            canciones.sort(function (a, b) {
+                return a.genero < b.genero ? 1 : -1;
+            });
+        }
+        actualizarTabla(canciones);
+        genero = !genero;
     }
 
     function cargarCanciones() {
